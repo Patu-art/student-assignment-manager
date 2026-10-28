@@ -15,6 +15,7 @@
   let pendingDeleteId = null;
   let toastTimer = null;
   let lastFocused = null;
+  let lastDeleteFocused = null;
 
   function loadAssignments() {
     try {
@@ -165,15 +166,15 @@
   }
   function setView(view) {
     activeView = view;
-    const titles = {all:["Overview","Your assignments","Keep track of every deadline and deliverable."],pending:["My assignments","Assignments to do","Your next steps, all in one place."],completed:["Completed","Things you've finished","Look how far you've come."],overdue:["Overdue","Deadlines to check","Start with one task. Make a plan and move forward."]};
+    const titles = {all:["Overview","Your assignments","Your coursework, organized by what needs attention."],pending:["My assignments","Work in progress","The assignments still on your plate."],completed:["Completed","Finished work","A record of what you have already handled."],overdue:["Overdue","Deadlines to recover","Start with one overdue task and make a plan."]};
     $$(".nav-link").forEach(button => {
       const active = button.dataset.view === view;
       button.classList.toggle("active", active);
       if (active) button.setAttribute("aria-current","page"); else button.removeAttribute("aria-current");
     });
     $("#breadcrumb-view").textContent = titles[view][0];
-    $("#page-title").innerHTML = escapeHTML(({all:"Good to see you",pending:"Let's get things done",completed:"Look at you go",overdue:"Let's get back on track"})[view]) + '<span class="heading-period">.</span>';
-    $("#page-subtitle").textContent = ({all:"Make room for what matters. One assignment at a time.",pending:"A clear list makes the next step easier.",completed:"Every finished task is progress worth noticing.",overdue:"No guilt, just a plan. Pick one thing to start."})[view];
+    $("#page-title").innerHTML = escapeHTML(({all:"Your coursework, in good order",pending:"One task at a time",completed:"Look what you finished",overdue:"Let's sort the overdue work"})[view]) + '<span class="heading-period">.</span>';
+    $("#page-subtitle").textContent = ({all:"A clear view of deadlines, priorities, and the next thing to finish.",pending:"Choose a realistic next step and give it your attention.",completed:"Use the finished list to see how much ground you have covered.",overdue:"No guilt, just a plan. Start with the deadline that matters most."})[view];
     $("#list-title").textContent = titles[view][1];
     $("#list-description").textContent = titles[view][2];
     els.sidebar.classList.remove("open");
@@ -248,15 +249,17 @@
     if (item) showToast(item.status === "completed" ? "Nice work — marked completed." : "Moved back to your to-do list.");
   }
   function openDelete(id) {
+    lastDeleteFocused = document.activeElement;
     pendingDeleteId = id;
     els.confirm.hidden = false;
     document.body.style.overflow = "hidden";
     $("#confirm-cancel").focus();
   }
-  function closeDelete() {
+  function closeDelete(restoreFocus = true) {
     els.confirm.hidden = true;
     pendingDeleteId = null;
     document.body.style.overflow = els.modal.hidden ? "" : "hidden";
+    if (restoreFocus && lastDeleteFocused && typeof lastDeleteFocused.focus === "function" && lastDeleteFocused.isConnected) lastDeleteFocused.focus();
   }
   function deleteAssignment() {
     if (!pendingDeleteId) return;
@@ -264,8 +267,10 @@
     const previous = assignments;
     assignments = assignments.filter(entry => entry.id !== pendingDeleteId);
     if (!saveAssignments()) { assignments = previous; return; }
-    closeDelete();
+    closeDelete(false);
     render();
+    const nextFocus = $("#assignment-list .completion-toggle") || $("#add-assignment");
+    if (nextFocus) nextFocus.focus();
     showToast(item ? '"' + item.title + '" deleted.' : "Assignment deleted.");
   }
   function handleListClick(event) {
@@ -293,7 +298,9 @@
     const now = new Date();
     $("#today-label").textContent = new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric"}).format(now);
     $("#greeting").textContent = now.getHours() < 12 ? "GOOD MORNING" : now.getHours() < 17 ? "GOOD AFTERNOON" : "YOUR STUDY SPACE";
-    applyTheme(localStorage.getItem(THEME_KEY) === "dark");
+    let savedTheme = "light";
+    try { savedTheme = localStorage.getItem(THEME_KEY) || "light"; } catch (_) {}
+    applyTheme(savedTheme === "dark");
     $$(".nav-link").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
     $("#add-assignment").addEventListener("click", () => openModal());
     els.list.addEventListener("click", handleListClick);
@@ -319,6 +326,13 @@
       $("#menu-toggle").setAttribute("aria-expanded", String(open));
       $("#menu-toggle").setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
     });
+    document.addEventListener("click", event => {
+      if (window.matchMedia("(max-width: 820px)").matches && els.sidebar.classList.contains("open") && !els.sidebar.contains(event.target) && !$("#menu-toggle").contains(event.target)) {
+        els.sidebar.classList.remove("open");
+        $("#menu-toggle").setAttribute("aria-expanded", "false");
+        $("#menu-toggle").setAttribute("aria-label", "Open navigation");
+      }
+    });
     document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         if (!els.confirm.hidden) closeDelete();
@@ -326,12 +340,20 @@
         else if (els.sidebar.classList.contains("open")) {
           els.sidebar.classList.remove("open");
           $("#menu-toggle").setAttribute("aria-expanded","false");
+          $("#menu-toggle").setAttribute("aria-label","Open navigation");
         }
       }
       if (event.key === "Tab" && !els.modal.hidden) {
         const focusable = $$('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href]', els.modal).filter(el => el.offsetParent !== null);
         if (!focusable.length) return;
         const first = focusable[0], last = focusable[focusable.length-1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+      if (event.key === "Tab" && !els.confirm.hidden) {
+        const focusable = $("button:not([disabled])", els.confirm).filter(el => el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0], last = focusable[focusable.length - 1];
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }

@@ -1,6 +1,6 @@
-# Taskwise — Student Assignment Manager
+# Margin — Student Assignment Manager
 
-A responsive, browser-based assignment planner built with plain HTML, CSS, and JavaScript.
+A student-first coursework planner built with plain HTML, CSS, and JavaScript. Margin uses an editorial paper-and-ink visual system, with a responsive layout and local-first data storage.
 
 ## Features
 - Dashboard totals for all, to-do, completed, and overdue assignments
@@ -11,7 +11,8 @@ A responsive, browser-based assignment planner built with plain HTML, CSS, and J
 - Automatic overdue and upcoming-deadline labels
 - Progress indicator, mobile navigation, and light/dark theme
 - Local persistence through browser `localStorage`
-- Accessible labels, keyboard focus states, escape-to-close dialogs, and reduced-motion support
+- Accessible labels, keyboard focus management, escape-to-close dialogs, and reduced-motion support
+- Warm paper-and-forest visual identity designed for coursework rather than a generic SaaS template
 
 ## Run locally
 Open `index.html` in a modern browser. No build tools or dependencies are required.

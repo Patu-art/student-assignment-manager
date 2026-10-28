@@ -349,3 +349,7 @@ body.dark .small-action { color: #b2beb2; }
   .priority-pill, .status-pill { font-size: 9px; }
   .app-footer { font-size: 9px; }
 }
+
+/* Keep primary-action text readable in dark mode while preserving the coral accent. */
+body.dark .primary-button { color: #fffaf4; background: #b7422c; border-color: #b7422c; }
+body.dark .primary-button:hover { background: #a83a27; border-color: #a83a27; }

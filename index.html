@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="A calm, simple dashboard to organize assignments, deadlines, and study priorities.">
+  <title>Taskwise — Student Assignment Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="./" aria-label="Taskwise home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19.5 6.8"/></svg></span>
+        <span>taskwise<span class="brand-dot">.</span></span>
+      </a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-view="all" type="button"><span class="nav-icon">▦</span> Overview</button>
+        <button class="nav-link" data-view="pending" type="button"><span class="nav-icon">◷</span> My assignments <span class="nav-count" id="nav-pending">0</span></button>
+        <button class="nav-link" data-view="completed" type="button"><span class="nav-icon">✓</span> Completed</button>
+        <button class="nav-link" data-view="overdue" type="button"><span class="nav-icon">!</span> Overdue</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip">
+          <span class="tip-spark">✦</span>
+          <p class="tip-title">A little progress adds up.</p>
+          <p class="tip-copy">Focus on the next task, not the whole mountain.</p>
+        </div>
+        <div class="sidebar-foot"><span class="status-dot"></span> Your work stays on this device</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu icon-button" id="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb-view">Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="today-label" id="today-label"></span>
+          <button class="icon-button theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme">◐</button>
+          <button class="avatar" type="button" id="profile-button" aria-label="About local storage" title="About your data">S</button>
+        </div>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow" id="greeting">YOUR STUDY SPACE</p>
+          <h1 id="page-title">Good to see you<span class="heading-period">.</span></h1>
+          <p class="page-subtitle" id="page-subtitle">Make room for what matters. One assignment at a time.</p>
+        </div>
+        <button class="primary-button" id="add-assignment" type="button"><span class="plus">＋</span> New assignment</button>
+      </section>
+
+      <section class="stats-grid" aria-label="Assignment summary">
+        <article class="stat-card stat-total">
+          <div class="stat-top"><span class="stat-label">Total assignments</span><span class="stat-icon icon-violet">▤</span></div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-foot">All your tasks in one place</div>
+          <div class="stat-accent accent-violet"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span class="stat-label">To do</span><span class="stat-icon icon-blue">◷</span></div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-foot">Still waiting for you</div>
+          <div class="stat-accent accent-blue"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span class="stat-label">Completed</span><span class="stat-icon icon-green">✓</span></div>
+          <div class="stat-value" id="stat-completed">0</div>
+          <div class="stat-foot" id="completed-foot">Every finish counts</div>
+          <div class="stat-accent accent-green"></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span class="stat-label">Overdue</span><span class="stat-icon icon-orange">!</span></div>
+          <div class="stat-value" id="stat-overdue">0</div>
+          <div class="stat-foot">Deadlines to check</div>
+          <div class="stat-accent accent-orange"></div>
+        </article>
+      </section>
+
+      <section class="progress-panel">
+        <div class="progress-copy">
+          <div class="progress-title">Your progress <span class="progress-emoji">✦</span></div>
+          <p id="progress-message">Your next win is waiting. Add an assignment to get started.</p>
+        </div>
+        <div class="progress-meter-wrap">
+          <div class="progress-number" id="progress-percent">0%</div>
+          <div class="progress-track" role="progressbar" aria-label="Assignments completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-track"><span id="progress-fill"></span></div>
+          <span class="progress-caption">completed</span>
+        </div>
+      </section>
+
+      <section class="assignments-section">
+        <div class="section-heading">
+          <div>
+            <h2 id="list-title">Your assignments</h2>
+            <p id="list-description">Keep track of every deadline and deliverable.</p>
+          </div>
+          <button class="text-button" id="clear-filters" type="button" hidden>Clear filters</button>
+        </div>
+        <div class="toolbar">
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search assignments..." autocomplete="off" aria-label="Search assignments"></label>
+          <div class="toolbar-filters">
+            <label class="select-wrap"><span class="sr-only">Filter by subject</span><select id="subject-filter"><option value="all">All subjects</option></select></label>
+            <label class="select-wrap"><span class="sr-only">Sort assignments</span><select id="sort-select"><option value="due-asc">Due date: soonest</option><option value="due-desc">Due date: latest</option><option value="priority">Priority: high first</option><option value="created">Recently added</option><option value="title">Title: A–Z</option></select></label>
+          </div>
+        </div>
+        <div class="assignment-list" id="assignment-list" aria-live="polite"></div>
+        <div class="list-footer"><span id="result-count">0 assignments</span><span class="keyboard-hint">Small steps. Steady progress.</span></div>
+      </section>
+
+      <footer class="app-footer"><span>Made for student life.</span><span>Taskwise <span class="footer-dot">·</span> Simple by design</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
+      <div class="modal-header"><div><p class="eyebrow">STAY ON TOP OF IT</p><h2 id="modal-title">New assignment</h2><p id="modal-description">Add the details now. You can update them anytime.</p></div><button class="icon-button close-modal" id="close-modal" type="button" aria-label="Close dialog">×</button></div>
+      <form id="assignment-form">
+        <input id="assignment-id" type="hidden">
+        <label class="field-label" for="assignment-title">Assignment title <span>*</span></label>
+        <input class="form-control" id="assignment-title" name="title" maxlength="100" placeholder="e.g. Graph theory problem set" required>
+        <div class="form-row">
+          <div><label class="field-label" for="assignment-subject">Subject <span>*</span></label><input class="form-control" id="assignment-subject" name="subject" maxlength="60" placeholder="e.g. Discrete Mathematics" required></div>
+          <div><label class="field-label" for="assignment-due">Due date <span>*</span></label><input class="form-control" id="assignment-due" name="dueDate" type="date" required></div>
+        </div>
+        <div class="form-row">
+          <div><label class="field-label" for="assignment-priority">Priority</label><select class="form-control" id="assignment-priority" name="priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+          <div><label class="field-label" for="assignment-status">Status</label><select class="form-control" id="assignment-status" name="status"><option value="pending">To do</option><option value="completed">Completed</option></select></div>
+        </div>
+        <label class="field-label" for="assignment-notes">Notes <span class="optional-label">Optional</span></label>
+        <textarea class="form-control notes-control" id="assignment-notes" name="notes" rows="3" maxlength="1000" placeholder="Instructions, links, or anything to remember..."></textarea>
+        <div class="form-error" id="form-error" role="alert"></div>
+        <div class="modal-actions"><button class="secondary-button" id="cancel-modal" type="button">Cancel</button><button class="primary-button" type="submit" id="save-assignment">Save assignment <span aria-hidden="true">→</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="confirm-backdrop" id="confirm-backdrop" hidden><section class="confirm-card" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title"><div class="confirm-icon">!</div><h2 id="confirm-title">Delete this assignment?</h2><p>This can't be undone. The assignment will be removed from this device.</p><div class="modal-actions"><button class="secondary-button" id="confirm-cancel" type="button">Keep it</button><button class="danger-button" id="confirm-delete" type="button">Delete assignment</button></div></section></div>
+</body>
+</html>

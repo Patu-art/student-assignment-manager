@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f8fc">
-  <meta name="description" content="A calm, simple dashboard to organize assignments, deadlines, and study priorities.">
-  <title>Taskwise — Student Assignment Manager</title>
+  <meta name="description" content="A thoughtful, local-first workspace for student assignments, due dates, and coursework priorities.">
+  <title>Margin — Student Assignment Manager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,9 +17,9 @@
     <aside class="sidebar" id="sidebar">
       <a class="brand" href="./" aria-label="Taskwise home">
         <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19.5 6.8"/></svg></span>
-        <span>taskwise<span class="brand-dot">.</span></span>
+        <span>margin<span class="brand-dot">.</span></span>
       </a>
-      <div class="workspace-label">WORKSPACE</div>
+      <div class="workspace-label">YOUR SEMESTER</div>
       <nav class="main-nav" aria-label="Main navigation">
         <button class="nav-link active" data-view="all" type="button"><span class="nav-icon">▦</span> Overview</button>
         <button class="nav-link" data-view="pending" type="button"><span class="nav-icon">◷</span> My assignments <span class="nav-count" id="nav-pending">0</span></button>
@@ -29,8 +29,8 @@
       <div class="sidebar-bottom">
         <div class="sidebar-tip">
           <span class="tip-spark">✦</span>
-          <p class="tip-title">A little progress adds up.</p>
-          <p class="tip-copy">Focus on the next task, not the whole mountain.</p>
+          <p class="tip-title">Keep the next step small.</p>
+          <p class="tip-copy">Deadlines feel lighter when you can see what matters first.</p>
         </div>
         <div class="sidebar-foot"><span class="status-dot"></span> Your work stays on this device</div>
       </div>
@@ -49,9 +49,9 @@
 
       <section class="page-heading">
         <div>
-          <p class="eyebrow" id="greeting">YOUR STUDY SPACE</p>
-          <h1 id="page-title">Good to see you<span class="heading-period">.</span></h1>
-          <p class="page-subtitle" id="page-subtitle">Make room for what matters. One assignment at a time.</p>
+          <p class="eyebrow" id="greeting">YOUR COURSEWORK DESK</p>
+          <h1 id="page-title">Your coursework,<br> in good order<span class="heading-period">.</span></h1>
+          <p class="page-subtitle" id="page-subtitle">A clear view of deadlines, priorities, and the next thing to finish.</p>
         </div>
         <button class="primary-button" id="add-assignment" type="button"><span class="plus">＋</span> New assignment</button>
       </section>
@@ -85,7 +85,7 @@
 
       <section class="progress-panel">
         <div class="progress-copy">
-          <div class="progress-title">Your progress <span class="progress-emoji">✦</span></div>
+          <div class="progress-title">The work is adding up <span class="progress-emoji">✦</span></div>
           <p id="progress-message">Your next win is waiting. Add an assignment to get started.</p>
         </div>
         <div class="progress-meter-wrap">
@@ -114,13 +114,13 @@
         <div class="list-footer"><span id="result-count">0 assignments</span><span class="keyboard-hint">Small steps. Steady progress.</span></div>
       </section>
 
-      <footer class="app-footer"><span>Made for student life.</span><span>Taskwise <span class="footer-dot">·</span> Simple by design</span></footer>
+      <footer class="app-footer"><span>Built for the rhythm of student work.</span><span>Margin <span class="footer-dot">·</span> Your coursework, in order</span></footer>
     </main>
   </div>
 
   <div class="modal-backdrop" id="modal-backdrop" hidden>
     <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
-      <div class="modal-header"><div><p class="eyebrow">STAY ON TOP OF IT</p><h2 id="modal-title">New assignment</h2><p id="modal-description">Add the details now. You can update them anytime.</p></div><button class="icon-button close-modal" id="close-modal" type="button" aria-label="Close dialog">×</button></div>
+      <div class="modal-header"><div><p class="eyebrow">MAKE A PLAN</p><h2 id="modal-title">New assignment</h2><p id="modal-description">Capture the deadline and decide what deserves attention first.</p></div><button class="icon-button close-modal" id="close-modal" type="button" aria-label="Close dialog">×</button></div>
       <form id="assignment-form">
         <input id="assignment-id" type="hidden">
         <label class="field-label" for="assignment-title">Assignment title <span>*</span></label>

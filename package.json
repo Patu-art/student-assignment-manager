@@ -1,0 +1,14 @@
+{
+  "name": "margin-student-assignment-manager",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Margin student assignment manager with automated browser and accessibility checks",
+  "scripts": {
+    "test:sitepro": "node tests/sitepro-audit.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "playwright": "1.55.0"
+  }
+}

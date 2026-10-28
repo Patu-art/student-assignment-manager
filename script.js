@@ -292,7 +292,7 @@
     $("#theme-toggle").setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
     $("#theme-toggle").title = dark ? "Switch to light theme" : "Switch to dark theme";
     $("#theme-toggle").textContent = dark ? "☼" : "◐";
-    document.querySelector('meta[name="theme-color"]').content = dark ? "#171827" : "#f7f8fc";
+    document.querySelector('meta[name="theme-color"]').content = dark ? "#151f1b" : "#f3f0e7";
   }
   function init() {
     const now = new Date();
@@ -327,7 +327,7 @@
       $("#menu-toggle").setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
     });
     document.addEventListener("click", event => {
-      if (window.matchMedia("(max-width: 820px)").matches && els.sidebar.classList.contains("open") && !els.sidebar.contains(event.target) && !$("#menu-toggle").contains(event.target)) {
+      if (window.matchMedia("(max-width: 820px)").matches && els.sidebar.classList.contains("open") && (!els.sidebar.contains(event.target) || event.target === els.sidebar) && !$("#menu-toggle").contains(event.target)) {
         els.sidebar.classList.remove("open");
         $("#menu-toggle").setAttribute("aria-expanded", "false");
         $("#menu-toggle").setAttribute("aria-label", "Open navigation");

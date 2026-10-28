@@ -96,7 +96,7 @@ try {
   const viewportResults = [];
   for (const width of [320, 360, 375, 430, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(300);
     const dimensions = await page.evaluate(() => ({
       width: window.innerWidth,
       documentWidth: document.documentElement.scrollWidth,

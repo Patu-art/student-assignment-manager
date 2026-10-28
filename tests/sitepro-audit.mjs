@@ -83,6 +83,7 @@ try {
   await page.getByRole("button", { name: "Delete assignment", exact: true }).click();
   check("Delete removes assignment", (await page.locator("#stat-total").innerText()) === "0");
     check("Delete returns to the empty state", await page.getByText("A fresh start. Let's plan it.").isVisible());
+  await page.getByRole("button", { name: "Overview", exact: true }).click();
 
   await page.getByRole("button", { name: /New assignment/ }).click();
   await page.getByLabel("Assignment title").fill("Responsive preview assignment");

@@ -62,13 +62,15 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Prepare production files
+        run: |
+          mkdir -p _site
+          cp index.html style.css script.js favicon.svg _site/
+          touch _site/.nojekyll
       - name: Upload website files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
-          exclude: |
-            tests/**
-            sitepro-artifacts/**
+          path: "_site"
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4

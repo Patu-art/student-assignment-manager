@@ -351,7 +351,7 @@
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
       if (event.key === "Tab" && !els.confirm.hidden) {
-        const focusable = $("button:not([disabled])", els.confirm).filter(el => el.offsetParent !== null);
+        const focusable = $$("button:not([disabled])", els.confirm).filter(el => el.offsetParent !== null);
         if (!focusable.length) return;
         const first = focusable[0], last = focusable[focusable.length - 1];
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }

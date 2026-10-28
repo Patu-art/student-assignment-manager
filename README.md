@@ -18,11 +18,14 @@ A student-first coursework planner built with plain HTML, CSS, and JavaScript. M
 Open `index.html` in a modern browser. No build tools or dependencies are required.
 
 ## Deploy with GitHub Pages
-In the repository, open **Settings → Pages**. Set the source to **Deploy from a branch**, select **main** and **/(root)**, then save. GitHub Pages will publish the site at:
+The `SITEPRO audit and deploy Margin` GitHub Actions workflow runs browser-based functional checks, responsive viewport checks, and a WCAG accessibility scan before deployment. In **Settings → Pages**, set the publishing source to **GitHub Actions**. A deployment is allowed only after the audit job passes. The site is published at:
 https://patu-art.github.io/student-assignment-manager/
 
 ## Data and privacy
 Assignments are stored in the current browser's local storage on the current device. They are not uploaded to a server, shared between devices, or protected by an account login. Clearing browser site data may remove them. Export/backup and cross-device synchronization are not included in this frontend-only version.
 
+## Quality checks
+Run `npm install` and `npm run test:sitepro` after installing the Playwright Chromium browser (`npx playwright install --with-deps chromium`). The automated audit covers create/edit/complete/delete flows, search and filters, local persistence, theme persistence, keyboard interactions, viewport widths from 320px to desktop, and serious/critical WCAG issues in both themes. Screenshots and reports are uploaded as artifacts by GitHub Actions.
+
 ## Browser support
-Use a recent version of Chrome, Edge, Firefox, or Safari. An internet connection is used only to load the optional Google Fonts; the app itself has no external runtime dependency.
+Use a recent version of Chrome, Edge, Firefox, or Safari. Google Fonts are optional presentation assets; system-font fallbacks keep the app usable if they cannot load.

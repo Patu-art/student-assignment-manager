@@ -38,7 +38,7 @@ try {
   await page.getByLabel("Assignment title").fill("SITEPRO audit assignment");
   await page.locator("#assignment-subject").fill("Discrete Mathematics");
   await page.locator("#assignment-due").fill(futureDateISO(7));
-  await page.getByLabel("Priority").selectOption("high");
+  await page.locator("#assignment-priority").selectOption("high");
   await page.getByLabel("Notes").fill("Check filters, editing, persistence and keyboard access.");
   await page.getByRole("button", { name: /Save assignment/ }).click();
   check("Assignment can be created", await page.getByRole("heading", { name: "SITEPRO audit assignment" }).isVisible());

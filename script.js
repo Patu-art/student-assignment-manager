@@ -31,7 +31,7 @@
         createdAt: Number(item.createdAt) || Date.now(), completedAt: item.completedAt || null
       }));
     } catch (error) {
-      console.warn("Taskwise could not read saved assignments.", error);
+      console.warn("Margin could not read saved assignments.", error);
       return [];
     }
   }
@@ -40,7 +40,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(assignments));
       return true;
     } catch (error) {
-      console.error("Taskwise could not save assignments.", error);
+      console.error("Margin could not save assignments.", error);
       showToast("Couldn't save changes. Check your browser storage settings.");
       return false;
     }

@@ -1,4 +1,4 @@
-name: Deploy Taskwise to GitHub Pages
+name: SITEPRO audit and deploy Margin
 
 on:
   push:
@@ -15,11 +15,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  audit:
+    name: Browser, responsive and accessibility audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install audit dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start local site server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/margin-site.log 2>&1 &
+          echo $! > /tmp/margin-site.pid
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/margin-site.log
+          exit 1
+      - name: Run SITEPRO browser audit
+        run: npm run test:sitepro
+      - name: Upload screenshots and audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: margin-sitepro-audit
+          path: sitepro-artifacts/
+          if-no-files-found: warn
+
   deploy:
+    name: Deploy audited website
+    needs: audit
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -29,6 +66,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: "."
+          exclude: |
+            tests/**
+            sitepro-artifacts/**
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4

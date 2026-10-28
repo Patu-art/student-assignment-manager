@@ -36,7 +36,7 @@ try {
   await page.getByRole("button", { name: /New assignment/ }).click();
   check("New-assignment dialog opens", await page.getByRole("dialog").isVisible());
   await page.getByLabel("Assignment title").fill("SITEPRO audit assignment");
-  await page.getByLabel("Subject", { exact: true }).fill("Discrete Mathematics");
+  await page.locator("#assignment-subject").fill("Discrete Mathematics");
   await page.getByLabel("Due date").fill(futureDateISO(7));
   await page.getByLabel("Priority").selectOption("high");
   await page.getByLabel("Notes").fill("Check filters, editing, persistence and keyboard access.");
@@ -87,7 +87,7 @@ try {
 
   await page.getByRole("button", { name: /New assignment/ }).click();
   await page.getByLabel("Assignment title").fill("Responsive preview assignment");
-  await page.getByLabel("Subject", { exact: true }).fill("Study Skills");
+  await page.locator("#assignment-subject").fill("Study Skills");
   await page.getByLabel("Due date").fill(futureDateISO(7));
   await page.getByRole("button", { name: /Save assignment/ }).click();
   check("Fresh preview item can be added after delete", await page.getByRole("heading", { name: "Responsive preview assignment" }).isVisible());

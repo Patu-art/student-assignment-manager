@@ -299,3 +299,53 @@ body.dark .nav-count { color: #f1d58e; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Readability pass: keep the editorial look without making interface text tiny. */
+body { font-size: 15px; line-height: 1.6; }
+.workspace-label { font-size: 10px; }
+.nav-link { font-size: 13px; }
+.tip-title { font-size: 13px; }
+.tip-copy { font-size: 12px; }
+.sidebar-foot { font-size: 11px; }
+.breadcrumb { font-size: 12px; }
+.today-label { font-size: 11px; }
+.eyebrow { font-size: 10px; }
+.page-subtitle { font-size: 13px; }
+.primary-button { font-size: 12px; }
+.stat-label { font-size: 11px; }
+.stat-foot { font-size: 10px; }
+.progress-copy p { font-size: 12px; }
+.progress-caption { font-size: 10px; }
+.section-heading h2 { font-size: 22px; }
+.section-heading p { font-size: 12px; }
+.text-button { font-size: 12px; }
+.search-box input { font-size: 12px; }
+.select-wrap select { font-size: 11px; }
+.assignment-title { font-size: 14px; }
+.card-description { font-size: 12px; }
+.card-meta { font-size: 10px; }
+.subject-chip { font-size: 10px; }
+.priority-pill, .status-pill { font-size: 9px; }
+.list-footer, .app-footer { font-size: 10px; }
+.field-label { font-size: 11px; }
+.form-control { font-size: 12px; }
+.modal-header p:not(.eyebrow), .form-error { font-size: 12px; }
+.secondary-button, .danger-button { font-size: 11px; }
+.toast { font-size: 12px; }
+body.dark .small-action { color: #b2beb2; }
+
+@media (max-width: 560px) {
+  .page-subtitle { font-size: 12px; }
+  .stat-label { font-size: 10px; }
+  .stat-foot { font-size: 9px; }
+  .progress-copy p { font-size: 11px; }
+  .section-heading h2 { font-size: 18px; }
+  .section-heading p { font-size: 11px; }
+  .search-box input { font-size: 12px; }
+  .select-wrap select { font-size: 11px; }
+  .assignment-title { font-size: 12px; }
+  .card-description { font-size: 11px; }
+  .card-meta { font-size: 10px; }
+  .priority-pill, .status-pill { font-size: 9px; }
+  .app-footer { font-size: 9px; }
+}

@@ -74,3 +74,41 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+  live-smoke:
+    name: Verify the published GitHub Pages site
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install audit dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Wait for the new deployment to be available
+        run: |
+          for attempt in $(seq 1 18); do
+            if curl --fail --location --silent --show-error https://patu-art.github.io/student-assignment-manager/ -o /tmp/margin-live.html 2>/dev/null && grep -q "Margin — Student Assignment Manager" /tmp/margin-live.html; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "The expected Margin deployment was not available at the public URL."
+          cat /tmp/margin-live.html 2>/dev/null || true
+          exit 1
+      - name: Run browser audit against the published site
+        env:
+          BASE_URL: https://patu-art.github.io/student-assignment-manager/
+        run: npm run test:sitepro
+      - name: Upload live-site screenshots and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: margin-live-sitepro-audit
+          path: sitepro-artifacts/
+          if-no-files-found: warn

@@ -297,7 +297,7 @@
   function init() {
     const now = new Date();
     $("#today-label").textContent = new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric"}).format(now);
-    $("#greeting").textContent = now.getHours() < 12 ? "GOOD MORNING" : now.getHours() < 17 ? "GOOD AFTERNOON" : "YOUR STUDY SPACE";
+    $("#greeting").textContent = now.getHours() < 12 ? "GOOD MORNING" : now.getHours() < 17 ? "GOOD AFTERNOON" : "YOUR COURSEWORK DESK";
     let savedTheme = "light";
     try { savedTheme = localStorage.getItem(THEME_KEY) || "light"; } catch (_) {}
     applyTheme(savedTheme === "dark");

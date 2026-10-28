@@ -44,6 +44,7 @@ try {
   check("Assignment can be created", await page.getByRole("heading", { name: "SITEPRO audit assignment" }).isVisible());
   check("Dashboard total updates", (await page.locator("#stat-total").innerText()) === "1");
   check("Subject filter is populated", await page.locator("#subject-filter option").count() === 2);
+  await page.screenshot({ path: path.join(outDir, "desktop-assignment.png"), fullPage: true });
 
   await page.getByRole("searchbox", { name: "Search assignments" }).fill("does-not-exist");
   check("Search can return an empty result", await page.getByText("No assignments found").isVisible());
@@ -81,7 +82,14 @@ try {
   await page.getByRole("button", { name: "Delete Updated audit assignment" }).click();
   await page.getByRole("button", { name: "Delete assignment", exact: true }).click();
   check("Delete removes assignment", (await page.locator("#stat-total").innerText()) === "0");
-  check("Delete returns to the empty state", await page.getByText("A fresh start. Let's plan it.").isVisible());
+    check("Delete returns to the empty state", await page.getByText("A fresh start. Let's plan it.").isVisible());
+
+  await page.getByRole("button", { name: /New assignment/ }).click();
+  await page.getByLabel("Assignment title").fill("Responsive preview assignment");
+  await page.getByLabel("Subject", { exact: true }).fill("Study Skills");
+  await page.getByLabel("Due date").fill(futureDateISO(7));
+  await page.getByRole("button", { name: /Save assignment/ }).click();
+  check("Fresh preview item can be added after delete", await page.getByRole("heading", { name: "Responsive preview assignment" }).isVisible());
 
   const viewportResults = [];
   for (const width of [320, 360, 375, 430, 768, 1024, 1440]) {
@@ -108,20 +116,22 @@ try {
   check("Mobile menu reports collapsed", (await page.locator("#menu-toggle").getAttribute("aria-expanded")) === "false");
 
   await page.getByRole("button", { name: /New assignment/ }).click();
+  await page.waitForFunction(() => document.activeElement?.id === "assignment-title");
   check("Opening dialog moves focus to title", (await page.evaluate(() => document.activeElement?.id)) === "assignment-title");
   await page.keyboard.press("Escape");
   check("Escape closes dialog and restores focus", await page.locator("#modal-backdrop").isHidden());
 
   await page.setViewportSize({ width: 1440, height: 1000 });
-  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
-  const seriousViolations = axe.violations.filter(v => ["serious", "critical"].includes(v.impact));
-  fs.writeFileSync(path.join(outDir, "axe-report.json"), JSON.stringify({
-    passes: axe.passes.length,
-    incomplete: axe.incomplete.length,
-    violations: axe.violations.map(v => ({ id: v.id, impact: v.impact, description: v.description, nodes: v.nodes.map(n => ({ target: n.target, summary: n.failureSummary })) }))
-  }, null, 2));
-  check("No serious or critical WCAG accessibility violations", seriousViolations.length === 0,
-    seriousViolations.map(v => v.id + " (" + v.impact + "): " + v.nodes.length + " node(s)").join("; "));
+  const axeResults = [];
+  for (const theme of ["light", "dark"]) {
+    const isDark = (await page.locator("body").getAttribute("class")).includes("dark");
+    if ((theme === "dark") !== isDark) await page.locator("#theme-toggle").click();
+    const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+    const serious = axe.violations.filter(v => ["serious", "critical"].includes(v.impact));
+    axeResults.push({ theme, passes: axe.passes.length, incomplete: axe.incomplete.length, violations: axe.violations.map(v => ({ id: v.id, impact: v.impact, description: v.description, nodes: v.nodes.map(n => ({ target: n.target, summary: n.failureSummary })) })) });
+    check("No serious or critical WCAG violations in " + theme + " theme", serious.length === 0, serious.map(v => v.id + " (" + v.impact + "): " + v.nodes.length + " node(s)").join("; "));
+  }
+  fs.writeFileSync(path.join(outDir, "axe-report.json"), JSON.stringify(axeResults, null, 2));
   check("No uncaught browser or console errors", consoleErrors.length === 0, consoleErrors.join(" | "));
 } catch (error) {
   failures.push("Unexpected test exception: " + (error.stack || error.message));

@@ -109,6 +109,9 @@ try {
     check("Heading and primary action have layout at " + width + "px", dimensions.headingWidth > 0 && dimensions.addButtonWidth > 0);
   }
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(300);
+  const closedSidebar = await page.locator("#sidebar").boundingBox();
+  check("Closed mobile sidebar is fully off-canvas", Boolean(closedSidebar) && closedSidebar.x + closedSidebar.width <= 0, JSON.stringify(closedSidebar));
   await page.screenshot({ path: path.join(outDir, "mobile-390.png"), fullPage: true });
   await page.locator("#menu-toggle").click();
   check("Mobile navigation opens", (await page.locator("#sidebar").getAttribute("class")).includes("open"));
